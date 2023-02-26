@@ -18,9 +18,9 @@ import re
 # Code
 #-----------------------------------------------------------------------------
 
-Vina = '/home/cyang/paper_XGB/delta_LinF9_XGB/software/smina_feature'
-Smina = '/home/cyang/paper_XGB/delta_LinF9_XGB/software/smina.static'
-SF = '/home/cyang/paper_XGB/delta_LinF9_XGB/software/sf_vina.txt'
+Vina = '/scratch/sx801/scripts/delta_LinF9_XGB/software/smina_feature'
+Smina = '/scratch/sx801/scripts/delta_LinF9_XGB/software/smina.static'
+SF = '/scratch/sx801/scripts/delta_LinF9_XGB/software/sf_vina.txt'
 
 def runVina(protpdbqt, ligpdbqt, Vina):
     """Run modified Smina program with Lin_F9 score and 48 features

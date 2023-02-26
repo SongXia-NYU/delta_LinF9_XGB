@@ -7,7 +7,7 @@ import numpy as np
 from scipy.spatial import distance
 import pandas as pd
 
-smina = '/home/cyang/paper_XGB/delta_LinF9_XGB/software/smina.static' ## set the smina path
+smina = '/scratch/sx801/scripts/delta_LinF9_XGB/software/smina.static' ## set the smina path
 
 def get_protein_file(infile):
     '''

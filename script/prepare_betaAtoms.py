@@ -4,7 +4,7 @@ import pandas as pd
 import alphaspace2 as al
 import mdtraj
  
-ADT = '/home/cyang/MGLTools-1.5.6/MGLToolsPckgs/AutoDockTools/Utilities24/prepare_receptor4.py'
+ADT = '/scratch/sx801/scripts/MGLTools-1.5.6/MGLToolsPckgs/AutoDockTools/Utilities24/prepare_receptor4.py'
 
 def Protein_pdbqt(PDB, PDBQT, ADT):
     '''
@@ -43,8 +43,10 @@ def Write_betaAtoms(ss, outfile):
             betaAtoms.write(line)
     betaAtoms.close()
     
-def Prepare_beta(pdb, outfile, ADT=ADT):
+def Prepare_beta(pdb, beta_atom_file, ADT=ADT):
     pdbqt = pdb[:-4]+'.pdbqt'
+    if os.path.exists(pdbqt) and os.path.exists(beta_atom_file):
+        return pdbqt
     Protein_pdbqt(pdb, pdbqt, ADT)
 
     pdb_noh = pdb[:-4]+'_noh.pdb'
@@ -57,7 +59,7 @@ def Prepare_beta(pdb, outfile, ADT=ADT):
     al.annotateVinaAtomTypes(pdbqt=pdbqt_noh, receptor=prot)
     ss = al.Snapshot()
     ss.run(prot)
-    Write_betaAtoms(ss, outfile)
+    Write_betaAtoms(ss, beta_atom_file)
     os.system('rm %s %s'%(pdb_noh, pdbqt_noh))
     return pdbqt
 

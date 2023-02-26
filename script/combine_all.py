@@ -57,7 +57,7 @@ def Calc_XGB(df):
     y_predict_ = []
 
     for i in range(1,11):
-        xgb_model = pickle.load(open("/home/cyang/paper_XGB/delta_LinF9_XGB/saved_model/mod_%d.pickle.dat"%i,"rb"))
+        xgb_model = pickle.load(open("/scratch/sx801/scripts/delta_LinF9_XGB/saved_model/mod_%d.pickle.dat"%i,"rb"))
         y_i_predict = xgb_model.predict(X, ntree_limit=xgb_model.best_ntree_limit)
         y_predict_.append(y_i_predict)
         

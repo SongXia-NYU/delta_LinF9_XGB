@@ -1,3 +1,4 @@
+import subprocess
 import sys, os, re
 import numpy as np
 from scipy.spatial import distance
@@ -23,29 +24,37 @@ import calc_sasa
 import calc_vina_features
 import prepare_betaAtoms
 
-Vina = '/home/cyang/paper_XGB/delta_LinF9_XGB/software/smina_feature'
-Smina = '/home/cyang/paper_XGB/delta_LinF9_XGB/software/smina.static'
-SF = '/home/cyang/paper_XGB/delta_LinF9_XGB/software/sf_vina.txt'
-ADT = '/home/cyang/MGLTools-1.5.6/MGLToolsPckgs/AutoDockTools/Utilities24/prepare_receptor4.py'
-model_dir = '/home/cyang/paper_XGB/delta_LinF9_XGB/saved_model'
+Vina = '/scratch/sx801/scripts/delta_LinF9_XGB/software/smina_feature'
+Smina = '/scratch/sx801/scripts/delta_LinF9_XGB/software/smina.static'
+SF = '/scratch/sx801/scripts/delta_LinF9_XGB/software/sf_vina.txt'
+ADT = '/scratch/sx801/scripts/mgltools_x86_64Linux2_1.5.7/MGLToolsPckgs/AutoDockTools/Utilities24/prepare_receptor4.py'
+model_dir = '/scratch/sx801/scripts/delta_LinF9_XGB/saved_model'
 
-def run_XGB(pro, lig):
+def run_XGB(pro, lig, return_name=False, return_linf9=False):
 
     if lig.endswith('.mol2'):
-        mol = Chem.MolFromMol2File(lig, removeHs=False)
+        lig_old = lig
         lig = lig[:-5]+'.pdb'
-        Chem.MolToPDBFile(mol, lig)
+        subprocess.run(f"/ext3/miniconda3/bin/obabel -imol2 {lig_old} -opdb -O {lig}", shell=True, check=True)
+        mol = Chem.MolFromPDBFile(lig, removeHs=False)
+        # Chem.MolToPDBFile(mol, lig)
         
     elif lig.endswith('.sdf'):
         mol = Chem.MolFromMolFile(lig, removeHs=False)
+        if mol is None:
+            return None, None, None
         lig = lig[:-4]+'.pdb'
         Chem.MolToPDBFile(mol, lig)
         
     elif lig.endswith('.pdb'):
         mol = Chem.MolFromPDBFile(lig, removeHs=False)
+    
+    if mol is None:
+        return None, None, None
 
     ## 1. prepare_betaAtoms
-    beta = os.path.join(os.path.dirname(pro), 'betaAtoms.pdb')
+    pro_name = os.path.basename(pro).split(".pdb")[0]
+    beta = os.path.join(os.path.dirname(pro), f'{pro_name}.beta.pdb')
     pro_pdbqt = prepare_betaAtoms.Prepare_beta(pro, beta, ADT)
 
     ## 2. Vina_features
@@ -89,6 +98,15 @@ def run_XGB(pro, lig):
 
     y_predict = np.average(y_predict_, axis=0)
     XGB = round(y_predict[0]+LinF9,3)
+
+    if return_name:
+        name = None
+        if mol.HasProp("_Name"):
+            name = mol.GetProp("_Name")
+        return XGB, name, LinF9
+    
+    if return_linf9:
+        return XGB, LinF9
     
     return XGB
 

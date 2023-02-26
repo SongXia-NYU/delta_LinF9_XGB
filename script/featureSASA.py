@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 from pharma import pharma
 
-msmsdir = "/home/cyang/paper_XGB/delta_LinF9_XGB/software/msms/"
+msmsdir = "/scratch/sx801/scripts/delta_LinF9_XGB/software/msms/"
 
 def runMSMS(inprot, inlig, MSMSDIR = '.'):
     """Assign pharmaphore type to each atom and calculate SASA by MSMS
