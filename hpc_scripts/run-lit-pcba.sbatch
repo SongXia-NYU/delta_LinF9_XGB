@@ -3,8 +3,8 @@
 #SBATCH --job-name=lit-pcba
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=8
-#SBATCH --time=18:00:00
-#SBATCH --mem=24GB
+#SBATCH --time=12:00:00
+#SBATCH --mem=12GB
 #SBATCH --mail-type=END,FAIL,TIME_LIMIT
 #SBATCH --mail-user=songxia23@gmail.com
 

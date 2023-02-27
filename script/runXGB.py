@@ -30,7 +30,7 @@ SF = '/scratch/sx801/scripts/delta_LinF9_XGB/software/sf_vina.txt'
 ADT = '/scratch/sx801/scripts/mgltools_x86_64Linux2_1.5.7/MGLToolsPckgs/AutoDockTools/Utilities24/prepare_receptor4.py'
 model_dir = '/scratch/sx801/scripts/delta_LinF9_XGB/saved_model'
 
-def run_XGB(pro, lig, return_name=False, return_linf9=False):
+def run_XGB(pro, lig, return_name=False, return_linf9=False, datadir=None):
 
     if lig.endswith('.mol2'):
         lig_old = lig
@@ -65,7 +65,10 @@ def run_XGB(pro, lig, return_name=False, return_linf9=False):
     betaScore, ligCover = calc_ligCover_betaScore.calc_betaScore_and_ligCover(lig, beta)
 
     ## 4. sasa_features
-    datadir = os.path.dirname(os.path.abspath(pro))
+    if datadir is None:
+        # datadir is a folder that stores temporary files
+        # Should be generated through tempdir to avoid clashing when multi-processing
+        datadir = os.path.dirname(os.path.abspath(pro))
     pro_ = os.path.abspath(pro)
     lig_ = os.path.abspath(lig)
     sasa_features = calc_sasa.sasa(datadir,pro_,lig_)

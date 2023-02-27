@@ -52,15 +52,17 @@ def Prepare_beta(pdb, beta_atom_file, ADT=ADT):
     pdb_noh = pdb[:-4]+'_noh.pdb'
     pdbqt_noh = pdb[:-4]+'_noh.pdbqt'
 
-    Strip_h(pdb, pdb_noh)
-    Strip_h(pdbqt, pdbqt_noh)
+    if not os.path.exists(pdb_noh):
+        Strip_h(pdb, pdb_noh)
+    if not os.path.exists(pdbqt_noh):
+        Strip_h(pdbqt, pdbqt_noh)
 
     prot = mdtraj.load(pdb_noh)
     al.annotateVinaAtomTypes(pdbqt=pdbqt_noh, receptor=prot)
     ss = al.Snapshot()
     ss.run(prot)
     Write_betaAtoms(ss, beta_atom_file)
-    os.system('rm %s %s'%(pdb_noh, pdbqt_noh))
+    # os.system('rm %s %s'%(pdb_noh, pdbqt_noh))
     return pdbqt
 
 def main():

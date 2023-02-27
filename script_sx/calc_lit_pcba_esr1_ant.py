@@ -20,7 +20,11 @@ def xgb_wrapper(args):
     with TemporaryDirectory() as temp_dir:
         # goto a temp_dir to avoid generation of temp file in the current directory
         os.chdir(temp_dir)
-        res = run_XGB(pro, lig, return_linf9=True)
+        try:
+            res = run_XGB(pro, lig, return_linf9=True, datadir=temp_dir)
+        except Exception as e:
+            print(f"ERROR proc {osp.basename(lig)}: {e}")
+            return None
     if len(res) == 3:
         assert res[0] is None, res
         return None
@@ -32,7 +36,7 @@ def xgb_wrapper(args):
     return res
 
 def run():
-    lig_pdbs = glob(osp.join(DROOT, "pose", "*.pdb"))[:10]
+    lig_pdbs = glob(osp.join(DROOT, "pose", "*.pdb"))
     prot_mol2s = glob(osp.join(DROOT, "*_protein.mol2"))
     for prot_mol2 in prot_mol2s:
         prot_pdb = prot_mol2.replace(".mol2", ".pdb")
